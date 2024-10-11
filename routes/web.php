@@ -3,7 +3,12 @@
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ShoeAdminController;
+use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\ShoeController;
+use App\Http\Controllers\UserController;
+use App\Http\Middleware\AuthMiddleware;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,9 +23,8 @@ use Illuminate\Support\Facades\Route;
 */
 
 // Client
-Route::get('/', function () {
-    return view('client.index');
-});
+
+Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
 
 Route::get('/about', function () {
@@ -53,9 +57,9 @@ Route::get('/lowPrice', [ShoeController::class, 'lowPrice'])->name('client.lowPr
 
 
 
-// Admin routes group
-Route::prefix('/admin')->group(function () {
-    Route::get('/', [DashboardController::class, 'dashboard']);
+// Admin routes group with middleware
+Route::prefix('/admin')->middleware(['auth.admin'])->group(function () {
+    Route::get('/', action: [DashboardController::class, 'dashboard'])->name('dashboard');
 
     // CRUD brands
     Route::resource('brands', BrandController::class);
@@ -63,8 +67,22 @@ Route::prefix('/admin')->group(function () {
     Route::put('/hide/{brand}', [BrandController::class, 'hide'])->name('brands.hide');
     Route::put('/restore/{brand}', [BrandController::class, 'restore'])->name('brands.restore');
 
-
+    // CRUD Shoes
     Route::resource('shoes', ShoeAdminController::class);
-
 });
+
+
+
+Auth::routes();
+Route::get('/login', [LoginController::class, 'showLoginForm'])->name('showLoginForm');
+Route::post('/login', [LoginController::class, 'login'])->name('login');
+
+// Route::get('/unSession', function () {
+//     session()->forget('user');
+
+// });
+
+Route::get('/profile/{user}', [UserController::class, 'profile'])->name('profile');
+
+
 

@@ -49,15 +49,16 @@
                     <div class="col-md-6">
                         <ul class="list-inline shop-top-menu pb-3 pt-1">
                             <li class="list-inline-item">
-                                <a class="h3 text-dark text-decoration-none mr-3" href="{{'/shop'}}">Tất cả sản phẩm</a>
+                                <a class="h3 text-dark text-decoration-none mr-3" href="{{ '/shop' }}">Tất cả sản
+                                    phẩm</a>
                             </li>
                         </ul>
                     </div>
 
                     <div class="col-md-6 pb-5">
-                        <a href="{{'/highPrice'}}" class="btn btn-primary">Giá cao</a>
-                        <a href="{{'/lowPrice'}}" class="btn btn-danger">Giá thấp</a>
-                       
+                        <a href="{{ '/highPrice' }}" class="btn btn-primary">Giá cao</a>
+                        <a href="{{ '/lowPrice' }}" class="btn btn-danger">Giá thấp</a>
+
                     </div>
                 </div>
 
@@ -68,7 +69,8 @@
                         <div class="col-md-4">
                             <div class="card mb-4 product-wap rounded-0">
                                 <div class="card rounded-0">
-                                    <img class="card-img rounded-0 img-fluid custom-height" src="{{ $shoe->thumbnail }}">
+                                    <img class="card-img rounded-0 img-fluid custom-height"
+                                        src="{{ asset('/storage/' . $shoe->thumbnail) }}">
                                     <div
                                         class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                                         <ul class="list-unstyled">
@@ -119,7 +121,7 @@
                 {{-- Phân trang --}}
                 <div class="row">
                     <div class="col-12 d-flex justify-content-end">
-                        {{ $shoes->links() }} 
+                        {{ $shoes->links() }}
                     </div>
                 </div>
 

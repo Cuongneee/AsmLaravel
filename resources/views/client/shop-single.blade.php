@@ -26,7 +26,7 @@
             <div class="row">
                 <div class="col-lg-5 mt-5">
                     <div class="card mb-3">
-                        <img class="card-img" src="{{ $shoes->thumbnail }}" alt="Card image cap" height="500px"
+                        <img class="card-img" src="{{ asset('/storage/' . $shoes->thumbnail) }}" alt="Card image cap" height="500px"
                             id="product-detail">
                     </div>
 

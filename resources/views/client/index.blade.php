@@ -159,7 +159,7 @@
                         <div class="card h-100">
 
                             <a href="">
-                                <img src="{{ $item->thumbnail }}" class="card-img-top" alt="..." height="300px">
+                                <img src="{{ asset('/storage/' . $item->thumbnail) }}" class="card-img-top" alt="..." height="350px">
                             </a>
                             <div class="card-body">
                                 <ul class="list-unstyled d-flex justify-content-between">

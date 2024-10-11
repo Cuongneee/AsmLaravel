@@ -41,21 +41,38 @@
                     </div>
                 </form>
             </div> --}}
-            
-            <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal"
-                data-bs-target="#templatemo_search">
-                <i class="fa fa-fw fa-search text-dark mr-2"></i>
-            </a>
-            <a class="nav-icon position-relative text-decoration-none" href="#">
-                <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
-                <span
-                    class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
-            </a>
-            <a class="nav-icon position-relative text-decoration-none" href="#">
-                <i class="fa fa-fw fa-user text-dark mr-3"></i>
-                <span
-                    class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">+99</span>
-            </a>
+
+
+            <div class="navbar align-self-center d-flex">
+                <a class="nav-icon d-none d-lg-inline" href="#" data-bs-toggle="modal"
+                    data-bs-target="#templatemo_search">
+                    <i class="fa fa-fw fa-search text-dark mr-2"></i>
+                </a>
+                <a class="nav-icon position-relative text-decoration-none" href="#">
+                    <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
+                    <span
+                        class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
+                </a>
+
+                @if (session()->has('user'))
+                    <a class="nav-icon position-relative text-decoration-none"
+                        href="{{ route('profile', session()->get('user.id_user')) }}">
+                        {{ session()->get('user.user_name') }}
+                    </a>
+                @else
+                    <a class="nav-icon position-relative text-decoration-none" href="{{ route('showLoginForm') }}">
+                        <i class="fa fa-fw fa-user text-dark mr-3"></i>
+                    </a>
+                @endif
+
+
+
+
+
+            </div>
+
+
+
         </div>
     </div>
 

@@ -61,7 +61,8 @@
                                         {{ $shoe->brand->brand_name }}
                                     </td>
                                     <td>
-                                        <img src="{{ $shoe->thumbnail }}" alt="" width="100px" height="100px">
+                                        <img src="{{ asset('/storage/' . $shoe->thumbnail) }}" alt="" width="100px"
+                                            height="100px">
                                     </td>
                                     <td>{{ $shoe->price }}</td>
                                     <td>{{ $shoe->view }}</td>
@@ -77,7 +78,7 @@
                                         <form action="{{ route('shoes.destroy', $shoe->id_shoe) }}" method="POST"
                                             style="display:inline-block;" onsubmit="return confirm('Chắc chắn xóa ❓❓❓');">
                                             @csrf
-                                            @method('PUT')
+                                            @method('DELETE')
                                             <button class="btn btn-danger" type="submit"
                                                 style="border:none; background-color:#ffcccc; padding:7px; border-radius:5px;">
                                                 <i class="fas fa-trash" style="color:red; font-size:20px;"></i>
