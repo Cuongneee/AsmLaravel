@@ -48,10 +48,18 @@
                     data-bs-target="#templatemo_search">
                     <i class="fa fa-fw fa-search text-dark mr-2"></i>
                 </a>
-                <a class="nav-icon position-relative text-decoration-none" href="#">
+
+                {{-- Giỏ hàng --}}
+                <?php
+                $cart = session()->get('cart', []);
+                $totalItems = array_sum(array_column($cart, 'quantity'));
+                ?>
+                <a class="nav-icon position-relative text-decoration-none" href="{{route('showCart')}}">
                     <i class="fa fa-fw fa-cart-arrow-down text-dark mr-1"></i>
                     <span
-                        class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">7</span>
+                        class="position-absolute top-0 left-100 translate-middle badge rounded-pill bg-light text-dark">
+                        {{ $totalItems }}
+                    </span>
                 </a>
 
                 @if (session()->has('user'))

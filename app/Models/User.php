@@ -27,7 +27,8 @@ class User extends Authenticatable
         'avata',
         'phone',
         'role',
-        'active'
+        'active',
+        'token'
     ];
 
     protected $primaryKey = 'id_user';

@@ -35,7 +35,10 @@ class Shoe extends Model
 
     public static function allShoes()
     {
-        return self::with('brand') 
+        return self::with('brand')
+            ->whereHas('brand', function ($query) {
+                $query->where('is_active', 1); 
+            })
             ->orderByDesc('id_shoe')
             ->paginate(9);
     }
@@ -46,6 +49,7 @@ class Shoe extends Model
             ->join('brands', 'shoes.brand_id', '=', 'brands.id_brand')
             ->select('shoes.*', 'brands.brand_name')
             ->where('shoes.brand_id', $id)
+            ->where('is_active', 1)
             ->paginate(9);
     }
 

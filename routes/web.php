@@ -1,12 +1,16 @@
 <?php
 
 use App\Http\Controllers\Admin\BrandController;
+use App\Http\Controllers\Admin\CommentAdminController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ShoeAdminController;
 use App\Http\Controllers\Admin\UserAdminController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\CartController;
+use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\ShoeController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthMiddleware;
@@ -77,6 +81,12 @@ Route::prefix('/admin')->middleware(['auth.admin'])->group(function () {
     Route::put('/users/{user}/activate', [UserAdminController::class, 'userActivate'])->name('userActivate');
     Route::put('/users/{user}/deactivate', [UserAdminController::class, 'userDeactivate'])->name('userDeactivate');
 
+    // CRUD Comments
+    Route::resource('comments', CommentAdminController::class);
+    Route::put('/comments/hide/{comment}', [CommentAdminController::class, 'hide'])->name('comments.hide');
+    Route::put('/comments/restore/{comment}', [CommentAdminController::class, 'restore'])->name('comments.restore');
+
+
 });
 
 
@@ -97,6 +107,25 @@ Route::put('/users/update/{user}', [UserController::class, 'updateProfile'])->na
 
 Route::get('/password/{user}', [UserController::class, 'formChangePass'])->name('formChangePass');
 Route::put('/users/updatePassword/{user}', [UserController::class, 'updatePassword'])->name('updatePassword');
+
+// SendMail
+Route::get('/users/forgot-password', [UserController::class, 'forgotPassword'])->name('forgotPassword');
+Route::post('/users/forgot-password', [UserController::class, 'postForgotPassword']);
+Route::get('/users/get-password/{user}/{token}', [UserController::class, 'getPassword'])->name('getPassword');
+Route::post('/users/get-password/{user}/{token}', [UserController::class, 'postPassword']);
+
+
+Route::post('/comment/store/{id}', [CommentController::class, 'storeComment'])->name('storeComment');
+
+// Cart
+Route::post('/add-to-cart/{id}', [CartController::class, 'addToCart'])->name('addToCart');
+Route::get('/cart', [CartController::class, 'showCart'])->name('showCart');
+Route::post('/cart/update/{id}', [CartController::class, 'updateCart'])->name('updateCart');
+Route::post('/cart/remove/{id}', [CartController::class, 'removeCart'])->name('removeFromCart');
+
+Route::get('/check-out', [CheckoutController::class, 'index'])->name('checkout');
+Route::post('/checkout', [CheckoutController::class, 'processCheckout'])->name('processCheckout');
+
 
 
 

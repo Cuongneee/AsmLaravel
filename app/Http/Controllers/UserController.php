@@ -6,7 +6,9 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class UserController extends Controller
 {
@@ -77,7 +79,7 @@ class UserController extends Controller
         ], [
             'new_password.confirmed' => 'Mật khẩu mới và nhập lại mật khẩu không khớp!',
         ]);
-       
+
 
         if (!Hash::check($request->current_password, $user->password)) {
             return redirect()->back()
@@ -90,6 +92,59 @@ class UserController extends Controller
         ]);
 
         return redirect()->route('profile', $user->id_user)->with('message', 'Đổi mật khẩu thành công✅');
+    }
+
+    public function forgotPassword()
+    {
+        return view('auth.passwords.forgotPassword');
+    }
+
+    public function postForgotPassword(Request $request)
+    {
+        $request->validate([
+            'email' => 'required|exists:users,email'
+        ], [
+            'email.required' => 'Vui lòng nhập vào email❗',
+            'email.exists' => 'Email không tồn tại hoặc chưa đăng ký❗',
+        ]);
+
+        $token = strtoupper(Str::random(10));
+        $user = User::where('email', $request->email)->first();
+
+
+        // Cập nhật token vào user
+        $user->update(['token' => $token]);
+        //  dd($user->token);
+
+        // Gửi email khôi phục mật khẩu
+        Mail::send('auth.emails.emailForgot', compact('user'), function ($email) use ($user) {
+            $email->subject('Admin - Lấy lại mật khẩu');
+            $email->to($user->email, $user->full_name);
+        });
+
+        return redirect()->route('login')->with('message', 'Email đã được gửi, vui lòng check mail để đổi mật khẩu❗');
+    }
+
+    public function getPassword(User $user, $token)
+    {
+        if ($user->token === $token) {
+            return view('auth.emails.getPassword');
+        }
+        return abort(404);
+    }
+
+    public function postPassword(User $user, $token, Request $request)
+    {
+        $request->validate([
+            'password' => 'required',
+            'password_confirmation' => 'required|same:password'
+        ]);
+
+        $passNew = bcrypt($request->password);
+        $user->update(['password' => $passNew, 'token' => null]);
+        return redirect()
+            ->route('showLoginForm')
+            ->with('message', 'Mật khẩu đã được cập nhật✅, vui lòng đăng nhập.');
     }
 
 

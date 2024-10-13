@@ -22,12 +22,17 @@
 
     <!-- Open Content -->
     <section class="bg-light">
+
+        @session('message')
+            <div class="alert text-success text-center">{{ session('message') }}</div>
+        @endsession
+
         <div class="container pb-5">
             <div class="row">
                 <div class="col-lg-5 mt-5">
                     <div class="card mb-3">
-                        <img class="card-img" src="{{ asset('/storage/' . $shoes->thumbnail) }}" alt="Card image cap" height="500px"
-                            id="product-detail">
+                        <img class="card-img" src="{{ asset('/storage/' . $shoes->thumbnail) }}" alt="Card image cap"
+                            height="500px" id="product-detail">
                     </div>
 
                 </div>
@@ -60,15 +65,14 @@
                             <h6>Đặc điểm:</h6>
                             <p>{{ $shoes->specification }}</p>
 
-                            <form action="" method="GET">
-                                <input type="hidden" name="product-title" value="Activewear">
+                            <form action="{{ route('addToCart', $shoes->id_shoe) }}" method="POST">
+                                @csrf
+                                <input type="hidden" name="quantity" id="product-quanity" value="1">
                                 <div class="row">
                                     <div class="col-auto">
                                         <ul class="list-inline pb-3">
                                             <li class="list-inline-item text-right">
                                                 Số lượng
-                                                <input type="hidden" name="product-quanity" id="product-quanity"
-                                                    value="1">
                                             </li>
                                             <li class="list-inline-item"><span class="btn btn-success"
                                                     id="btn-minus">-</span></li>
@@ -79,21 +83,66 @@
                                         </ul>
                                     </div>
                                 </div>
-                                <div class="row pb-3">
-                                    <div class="col d-grid">
-                                        <button type="submit" class="btn btn-success btn-lg" name="submit"
-                                            value="buy">Mua</button>
-                                    </div>
-                                    <div class="col d-grid">
-                                        <button type="submit" class="btn btn-success btn-lg" name="submit"
-                                            value="addtocard">Thêm vào giỏ hàng</button>
-                                    </div>
-                                </div>
+                                <button type="submit" class="btn btn-success btn-lg" name="submit" value="addtocart">Thêm
+                                    vào giỏ hàng</button>
                             </form>
+
 
                         </div>
                     </div>
                 </div>
+
+                <!-- Start Comments Section -->
+                <section class="py-5">
+                    <div class="container">
+                        <div class="row text-left p-2 pb-3">
+                            <h4>Bình luận</h4>
+                        </div>
+
+                        <!-- Display Comments -->
+                        <div class="comments-list">
+                            @foreach ($comments as $comment)
+                                <div class="card mb-2">
+                                    <div class="card-body">
+                                        @if ($comment->user)
+                                            <h6 class="card-title">
+                                                <img src="{{ asset('/storage/' . $comment->user->avata) }}" alt="Avatar"
+                                                    class="avatar rounded-circle" height="30px" width="32px">
+                                                {{ $comment->user->user_name }}
+                                            </h6>
+                                        @else
+                                            <h6 class="card-title">Người dùng không xác định</h6>
+                                        @endif
+                                        <p class="card-text">{{ $comment->content }}</p>
+                                        <small class="text-muted">{{ $comment->created_at->format('d/m/Y H:i') }}</small>
+                                    </div>
+                                </div>
+                            @endforeach
+                        </div>
+                        <!-- Comment Form -->
+                        @if (session('user.id_user'))
+                            <div class="comment-form">
+                                <form action="{{ route('storeComment', $shoes->id_shoe) }}" method="POST">
+                                    @csrf
+                                    <div class="mb-3">
+                                        <label for="comment" class="form-label">Nhập bình luận của bạn:</label>
+                                        <textarea class="form-control" id="comment" name="content" rows="3"></textarea>
+                                        @error('content')
+                                            <span class="text-danger">{{ $message }}</span>
+                                        @enderror
+                                    </div>
+                                    <button type="submit" class="btn btn-success">Gửi bình luận</button>
+                                </form>
+                            </div>
+                        @else
+                            <div class="alert alert-warning" role="alert">
+                                Bạn cần <a href="{{ route('login') }}">đăng nhập</a> để có thể bình luận.
+                            </div>
+                        @endif
+                    </div>
+                </section>
+                <!-- End Comments Section -->
+
             </div>
         </div>
     </section>
@@ -114,13 +163,15 @@
                         <div class="product-wap card rounded-0">
 
                             <div class="card rounded-0">
-                                <img class="card-img rounded-0" src="{{ $brand->thumbnail }}" height="350px">
+                                <img class="card-img rounded-0" src="{{ asset('/storage/' . $brand->thumbnail) }}"
+                                    height="350px">
                                 <div
                                     class="card-img-overlay rounded-0 product-overlay d-flex align-items-center justify-content-center">
                                     <ul class="list-unstyled">
                                         <li><a class="btn btn-success text-white" href="shop-single.html"><i
                                                     class="far fa-heart"></i></a></li>
-                                        <li><a class="btn btn-success text-white mt-2" href="{{ route('client.shop-single', $brand->id_shoe) }}"><i
+                                        <li><a class="btn btn-success text-white mt-2"
+                                                href="{{ route('client.shop-single', $brand->id_shoe) }}"><i
                                                     class="far fa-eye"></i></a></li>
                                         <li><a class="btn btn-success text-white mt-2" href="shop-single.html"><i
                                                     class="fas fa-cart-plus"></i></a></li>
@@ -161,8 +212,44 @@
                     </div>
                 @endforeach
             </div>
+            <form action="{{ route('addToCart', $shoes->id_shoe) }}" method="POST">
+                @csrf
+                <input type="hidden" name="quantity" id="product-quanity" value="1">
+                <div class="row">
+                    <div class="col-auto">
+                        <ul class="list-inline pb-3">
+                            <li class="list-inline-item text-right">
+                                Số lượng
+                            </li>
+                            <li class="list-inline-item"><span class="btn btn-success" id="btn-minus">-</span></li>
+                            <li class="list-inline-item"><span class="badge bg-secondary" id="var-value">1</span></li>
+                            <li class="list-inline-item"><span class="btn btn-success" id="btn-plus">+</span></li>
+                        </ul>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-success btn-lg" name="submit" value="addtocart">Thêm vào giỏ
+                    hàng</button>
+            </form>
 
         </div>
     </section>
     <!-- End Article -->
 @endsection
+
+<script>
+    document.getElementById('btn-plus').addEventListener('click', function() {
+        let quantity = parseInt(document.getElementById('var-value').textContent);
+        quantity++;
+        document.getElementById('var-value').textContent = quantity;
+        document.getElementById('product-quanity').value = quantity;
+    });
+
+    document.getElementById('btn-minus').addEventListener('click', function() {
+        let quantity = parseInt(document.getElementById('var-value').textContent);
+        if (quantity > 1) {
+            quantity--;
+            document.getElementById('var-value').textContent = quantity;
+            document.getElementById('product-quanity').value = quantity;
+        }
+    });
+</script>

@@ -8,6 +8,8 @@ use Illuminate\Foundation\Auth\RegistersUsers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
+use PhpParser\Node\Stmt\Return_;
 
 class RegisterController extends Controller
 {
@@ -66,14 +68,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+         return User::create([
             'user_name' => $data['user_name'],
             'full_name' => $data['full_name'],
             'email' => $data['email'],
             'phone' => $data['phone'],
             'password' => Hash::make($data['password']),
+            'token' => strtoupper(Str::random(10)),
         ]);
-
+        // dd($user->token);
     }
 
     public function register(Request $request)

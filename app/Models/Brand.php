@@ -23,11 +23,13 @@ class Brand extends Model
 
     public function allBrand()
     {
-        return $brands = DB::table('brands')->get();
+        return $brands = DB::table('brands')
+            ->where('is_active', 1)
+            ->get();
     }
 
     public function shoes()
-{
-    return $this->hasMany(Shoe::class, 'brand_id', 'id_brand'); 
-}
+    {
+        return $this->hasMany(Shoe::class, 'brand_id', 'id_brand');
+    }
 }

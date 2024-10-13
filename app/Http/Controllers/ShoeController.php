@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Brand;
+use App\Models\Comment;
 use App\Models\Shoe;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -16,6 +17,8 @@ class ShoeController extends Controller
         $brands = Brand::all();
         $shoes = Shoe::allShoes();
 
+        // dd($shoes);
+        // dd($brands);
         return view('client.shop', compact('brands', 'shoes'));
     }
 
@@ -28,11 +31,16 @@ class ShoeController extends Controller
             ->join('brands', 'shoes.brand_id', '=', 'brands.id_brand')
             ->select('shoes.*', 'brand_name')
             ->where('id_shoe', $id)
+            ->where('is_active', 1)
             ->first();
         // dd($shoes);
 
         // Lấy brand_id hiện tại
         $brandId = $shoes->brand_id;
+        $comments = Comment::where('shoe_id', $id)
+        ->where('active', 1)
+        ->with('user')
+        ->get(); 
 
         // Hiển thị theo brand
         $sameBrand = DB::table('shoes')
@@ -49,7 +57,7 @@ class ShoeController extends Controller
 
         // dd($sameBrand);
 
-        return view('client.shop-single', compact('brands', 'shoes', 'sameBrand'));
+        return view('client.shop-single', compact('brands', 'shoes', 'sameBrand', 'comments'));
     }
 
     public function listBrand($id)
