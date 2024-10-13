@@ -3,8 +3,10 @@
 use App\Http\Controllers\Admin\BrandController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ShoeAdminController;
+use App\Http\Controllers\Admin\UserAdminController;
 use App\Http\Controllers\Auth\AuthController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\ShoeController;
 use App\Http\Controllers\UserController;
 use App\Http\Middleware\AuthMiddleware;
@@ -69,6 +71,12 @@ Route::prefix('/admin')->middleware(['auth.admin'])->group(function () {
 
     // CRUD Shoes
     Route::resource('shoes', ShoeAdminController::class);
+
+    // CRUD Users
+    Route::resource('users', UserAdminController::class);
+    Route::put('/users/{user}/activate', [UserAdminController::class, 'userActivate'])->name('userActivate');
+    Route::put('/users/{user}/deactivate', [UserAdminController::class, 'userDeactivate'])->name('userDeactivate');
+
 });
 
 
@@ -77,12 +85,19 @@ Auth::routes();
 Route::get('/login', [LoginController::class, 'showLoginForm'])->name('showLoginForm');
 Route::post('/login', [LoginController::class, 'login'])->name('login');
 
-// Route::get('/unSession', function () {
-//     session()->forget('user');
+Route::get('/unSession', function () {
+    session()->forget('user');
 
-// });
+});
+
+Route::get('/logout', [LogoutController::class, 'logout'])->name('logout');
 
 Route::get('/profile/{user}', [UserController::class, 'profile'])->name('profile');
+Route::put('/users/update/{user}', [UserController::class, 'updateProfile'])->name('updateProfile');
+
+Route::get('/password/{user}', [UserController::class, 'formChangePass'])->name('formChangePass');
+Route::put('/users/updatePassword/{user}', [UserController::class, 'updatePassword'])->name('updatePassword');
+
 
 
 

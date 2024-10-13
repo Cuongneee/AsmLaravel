@@ -25,4 +25,9 @@ class Brand extends Model
     {
         return $brands = DB::table('brands')->get();
     }
+
+    public function shoes()
+{
+    return $this->hasMany(Shoe::class, 'brand_id', 'id_brand'); 
+}
 }

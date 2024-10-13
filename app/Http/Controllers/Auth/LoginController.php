@@ -60,6 +60,12 @@ class LoginController extends Controller
         $isPasswordCorrect = false;
         if ($user) {
             $isPasswordCorrect = Hash::check($info['password'], $user->password);
+
+            if ($user->active == 0) {
+
+                Auth::logout();
+                return redirect()->back()->with('error', 'Tài khoản bị vô hiệu hóa vui lòng thử lại sau❗');
+            }
         }
         // Kiểm tra checkbox có đc chọn
         $remember = $request->filled('remember_token');

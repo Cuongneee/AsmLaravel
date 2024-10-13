@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Validation\Rule;
 
@@ -10,11 +11,13 @@ class BrandController extends Controller
 {
     public function index()
     {
+        $admin = User::where('role', 'admin')->first();
+
         $brands = Brand::paginate(10);
 
         // dd($brands);
 
-        return view('admin.brands.index', compact('brands'));
+        return view('admin.brands.index', compact('brands', 'admin'));
     }
 
     public function create()

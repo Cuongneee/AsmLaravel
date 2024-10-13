@@ -25,25 +25,19 @@ class Shoe extends Model
     ];
 
     protected $attributes = [
-        'view' => 0, 
+        'view' => 0,
     ];
 
     public function brand()
     {
-        return $this->belongsTo(Brand::class, 'brand_id', 'id_brand');
+        return $this->belongsTo(Brand::class, 'brand_id', 'id_brand'); // Sửa đúng
     }
 
     public static function allShoes()
     {
-        // Lấy danh mục
-        return $shoes = DB::table('shoes')
-            ->join('brands', 'shoes.brand_id', '=', 'brands.id_brand')
-            ->select('shoes.*', 'brands.brand_name')
+        return self::with('brand') 
             ->orderByDesc('id_shoe')
-            ->limit(9)
             ->paginate(9);
-
-
     }
 
     public static function loadBrand($id)

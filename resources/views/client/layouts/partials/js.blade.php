@@ -5,6 +5,7 @@
  <script src="/client/assets/js/templatemo.js"></script>
  <script src="/client/assets/js/custom.js"></script>
  <script src="/client/assets/js/slick.min.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
  <!-- Start Slider Script -->
  <script>
      $('#carousel-related-product').slick({

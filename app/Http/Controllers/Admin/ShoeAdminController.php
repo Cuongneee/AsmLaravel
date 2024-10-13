@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Brand;
 use App\Models\Shoe;
+use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -13,9 +14,11 @@ class ShoeAdminController extends Controller
 {
     public function index()
     {
+        $admin = User::where('role', 'admin')->first();
+
         $shoes = Shoe::with('brand')->latest('id_shoe')->paginate(10);
         // dd($shoes);
-        return view('admin.shoes.index', compact('shoes'));
+        return view('admin.shoes.index', compact('shoes', 'admin'));
     }
 
     public function show(Shoe $shoe)
